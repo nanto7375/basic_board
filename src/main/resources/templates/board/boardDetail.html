@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="jquery-3.6.0.js"></script>
+<script>
+    // const like = function (x, idx) {}
+    function like(x, idx) {
+        // var idx = [[${board.b_idx}]];
+
+        if (x == 'a') {
+            $.ajax({
+                type: "post",
+                url	: "/likeOrUnlike",
+                data: { "x" : "a", "idx" : idx},
+                success : function(chkRst) {
+                    if (chkRst == 0) {
+                        alert("좋아요 추가에 실패했습니다.\n다시 시도해주세요.");
+
+                    } else if (chkRst == 5) {
+                        location.href = "/login";
+                    } else {
+                        location.reload();
+                    }
+                }
+            });
+        } else {
+            $.ajax({
+                type: "post",
+                url	: "/likeOrUnlike",
+                data: { "x" : "b", "idx" : idx},
+                success : function(chkRst) {
+                    if (chkRst == 0) {
+                        alert("좋아요 취소에 실패했습니다.\n다시 시도해주세요.");
+
+                    } else {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+<body>
+<div class="container">
+    <div>
+        <table width="500" id="boardTable">
+            <tr>
+                <th width="*">제목</th>
+                <td colspan="3" th:text="${board.b_title} + '(' + ${board.b_replycount} + ')'"></td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td width="" th:text="${board.m_id}"></td>
+                <th>작성일</th>
+                <td width="" th:text="${#strings.substring(board.b_date,0,10)}"></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td colspan="3" th:text="${board.b_content}"></td>
+            </tr>
+        </table>
+        <div>
+            <input th:if="${session.loginMember} != null and ${session.loginMember.m_id.equals(board.getM_id())}" type="button" value="수정" th:onclick="|location.href='@{/boardDetail?wtype=u&idx={idx}(idx=${board.b_idx})}'|" />
+            <input th:if="${session.loginMember} != null and ${session.loginMember.getM_id().equals(board.getM_id())}" type="button" value="삭제" th:onclick="|location.href='@{/delete?idx={idx}(idx=${board.b_idx})}'|" />
+            <input type="button" value="목록" onclick="location.href='/boardList'" />
+        </div>
+        <div>
+            <span th:text="${board.b_like}"></span>
+            <button th:if="${good} == null" th:attr="onclick=|like('a', '${board.b_idx}')|">좋아요</button>
+            <button th:if="${good} != null" th:attr="onclick=|like('b', '${board.b_idx}')|">좋아요 취소</button>
+            <!--
+            <input th:if="${good} == null" type="button" value="좋아요" th:onclick="|javascript:like('like')|" />
+            <input th:if="${good} == null" type="button" value="좋아요" th:onclick="'javascript:like(\'like\');" />
+            -->
+        </div>
+        <div th:if="${session.loginMember} != null">
+            <form action="regReply" method="post">
+                <input type="hidden" name="b_idx" th:value="${board.b_idx}" />
+                <input type="hidden" name="m_id" th:value="${board.m_id}" />
+                <input type="text" name="r_content" size="40" />
+                <input type="submit" value="등록" />
+            </form>
+        </div>
+        <table id="replyTable">
+            <tr th:if="${#lists.size(replyList)} > 0" th:align="center" th:each="reply : ${replyList}">
+                <td th:text="${reply.m_id}"></td>
+                <td th:text="${reply.r_content}"></td>
+                <td th:text="${#strings.substring(reply.r_date,0,10)}"></td>
+                <td th:if="${session.loginMember} != null and ${session.loginMember.m_id.equals(reply.m_id)}">
+                    <input type="button" value="삭제" th:onclick="|location.href='@{/delReply?r_idx={r_idx}&b_idx={b_idx}(r_idx=${reply.r_idx}, b_idx=${board.b_idx})}'|" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

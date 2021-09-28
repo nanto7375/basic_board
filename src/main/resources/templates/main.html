@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>three</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<a th:if="${session.loginMember} == null" href="/join">회원가입</a>
+<a th:if="${session.loginMember} == null" href="/login">로그인</a>
+<a th:if="${session.loginMember} != null" href="/logout">로그아웃</a>
+<p th:if="${session.loginMember} != null" th:text="${session.loginMember.m_id} + '님 반갑습니다.'"></p>
+<a href="/boardList">게시판</a>
+</body>
+</html>

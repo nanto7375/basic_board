@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table th:width="800">
+    <tr>
+        <th width="12%">글번호</th>
+        <th width="*">제목</th>
+        <th width="15%">작성자</th>
+        <th width="15%">작성일</th>
+        <th width="12%">조회수</th>
+    </tr>
+    <tr th:if="${#lists.size(boardList)} > 0" th:align="center" th:each="board : ${boardList}">
+        <td th:text="${board.b_idx}"></td>
+        <td th:align="left">
+            <a href="boardDetail?wtype=v&idx="th:attrappend="href=${board.b_idx}" th:text="${board.b_title}"></a>
+            <span th:text="'(' + ${board.b_replycount} + ')'"></span>
+        </td>
+        <td th:text="${board.m_id}"></td>
+        <td th:text="${#strings.substring(board.b_date,0,10)}"></td>
+        <td th:text="${board.b_read}"></td>
+    </tr>
+    <tr th:unless="${#lists.size(boardList)} > 0">
+        <td colspan="4">조회된 결과가 없습니다.</td>
+    </tr>
+    <tr>
+        <td><input type="button" value="글쓰기" onclick="location.href='register'" /></td>
+    </tr>
+</table>
+<div>
+    <form action="/boardList">
+    <select name="search">
+        <option th:selected="${search.equals('title')}" value="title">제목</option>
+        <option th:selected="${search.equals('content')}" value="content">내용</option>
+        <option th:selected="${search.equals('all')}" value="all">제목 + 내용</option>
+    </select>
+    <input type="text" name="keyword" th:value="${keyword}" />
+    <input type="submit" value="검색" />
+    </form>
+</div>
+</body>
+</html>

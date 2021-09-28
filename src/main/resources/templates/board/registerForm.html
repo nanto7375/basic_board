@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/register" method="post">
+    <input type="hidden" name="m_id" th:value="${session.loginMember.m_id}" />
+    제목 : <input type="text" name="b_title" /><br />
+    작성자 : <span th:text="${session.loginMember.m_id}"></span><br />
+    내용 : <textarea name="b_content" /></textarea><br />
+    <input type="submit" value="등록" />
+    <input type="button" value="취소" onclick="location.href='/boardList'" />
+</form>
+</body>
+</html>

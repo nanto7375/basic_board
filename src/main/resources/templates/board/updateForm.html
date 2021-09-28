@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/update" method="post">
+    <input type="hidden" name="b_idx" th:value="${board.b_idx}" />
+    <input type="hidden" name="m_id" th:value="${board.m_id}" />
+    제목 : <input type="text" name="b_title" th:value="${board.b_title}" /><br />
+    작성자 : <span th:text="${session.loginMember.m_id}"></span><br />
+    내용 : <textarea name="b_content" th:text="${board.b_content}"></textarea><br />
+
+    <input type="submit" value="수정" />
+    <input type="button" value="취소" th:onclick="|location.href='@{/boardDetail?wtype=v&idx={idx}(idx=${board.b_idx})}'|" />
+</form>
+</body>
+</html>
